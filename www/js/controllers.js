@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('CreateCtrl', function($scope, Stories) {
+.controller('CreateCtrl', function($scope, Stories, Camera) {
 
     $scope.storyIsActive = false;
 
@@ -13,8 +13,19 @@ angular.module('starter.controllers', [])
     };
 
     $scope.endStory = function(){
-        console.log('Story has ended.')
-        $scope.storyIsActive = false;
+        Stories.endStory().then(function(data) {
+            console.log('Story has ended.')
+            console.log('data', data);
+            $scope.storyIsActive = false;
+        });
+    };
+
+    $scope.takePhoto = function() {
+        Camera.getPicture().then(function(imageURI) {
+            console.log(imageURI);
+        }, function(err) {
+            console.err(err);
+        });
     };
 
 })
