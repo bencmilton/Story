@@ -47,4 +47,16 @@ angular.module('starter.services', [])
       return null;
     }
   };
+})
+
+.factory('Stories', function($http) {
+
+    return {
+        createStory: function() {
+            return $http.get('http://localhost:3001/create').then(function(res) {
+                return res.data;
+            });
+        }
+    };
+
 });
