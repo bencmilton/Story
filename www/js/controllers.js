@@ -4,13 +4,18 @@ angular.module('starter.controllers', [])
 
     $scope.storyIsActive = false;
 
-    $scope.startStory = function(){
-        Stories.createStory().then(function(data) {
-            console.log('Story has started.')
-            console.log('data', data);
-            $scope.storyIsActive = true;
-        });
-    };
+    //$scope.schedule = function () {
+    //    console.log('scheduled!')
+    //
+    //};
+
+    //$scope.startStory = function(){
+    //    Stories.createStory().then(function(data) {
+    //        console.log('Story has started.')
+    //        console.log('data', data);
+    //        $scope.storyIsActive = true;
+    //    });
+    //};
 
     $scope.endStory = function(){
         Stories.endStory().then(function(data) {
