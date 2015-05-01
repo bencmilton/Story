@@ -1,53 +1,85 @@
 angular.module('starter.controllers', [])
 
-.controller('CreateCtrl', function($scope, Stories, Camera) {
+    .controller('CreateCtrl', function ($scope, Stories, Camera) {
 
-    $scope.storyIsActive = false;
+        $scope.storyIsActive = false;
 
-    //$scope.schedule = function () {
-    //    console.log('scheduled!')
-    //
-    //};
+        $scope.startSlots = {epochTime: 12600, format: 12, step: 15};
+        $scope.endSlots = {epochTime: 12600, format: 12, step: 15};
 
-    //$scope.startStory = function(){
-    //    Stories.createStory().then(function(data) {
-    //        console.log('Story has started.')
-    //        console.log('data', data);
-    //        $scope.storyIsActive = true;
-    //    });
-    //};
+        $scope.toggleScheduler = function(){
+            $scope.showScheduleOptions = !($scope.showScheduleOptions);
+        };
 
-    $scope.endStory = function(){
-        Stories.endStory().then(function(data) {
-            console.log('Story has ended.')
-            console.log('data', data);
-            $scope.storyIsActive = false;
-        });
-    };
+        var schedule = function (start, end, interval) {
 
-    $scope.takePhoto = function() {
-        Camera.getPicture().then(function(imageURI) {
-            console.log(imageURI);
-        }, function(err) {
-            console.err(err);
-        });
-    };
+            if (!start) {
+                start = new Date().getTime();
+            }
 
-})
+            if (!interval) {
+                interval = 1200000;
+            } else {
+                interval = interval * 60000;
+            }
 
-.controller('StoriesCtrl', function($scope, Chats) {
-    $scope.chats = Chats.all();
-    $scope.remove = function(chat) {
-        Chats.remove(chat);
-    };
-})
+            var nudge = new Date(start + interval);
+            console.log('duh')
+
+            cordova.plugins.notification.local.schedule({
+                at: nudge,
+                badge: 1,
+                text: 'Picture Time!'
+            });
+
+            console.log('scheduled!')
+
+        };
+
+        $scope.startStory = function (start, end, interval) {
+
+            $scope.storyIsActive = true;
+
+            schedule(start, end, interval);
+
+
+            Stories.startStory(start, end).then(function (data) {
+                console.log('Story has started.')
+                console.log('data', data);
+            });
+        };
+
+        $scope.endStory = function () {
+            Stories.endStory().then(function (data) {
+                console.log('Story has ended.')
+                console.log('data', data);
+                $scope.storyIsActive = false;
+            });
+        };
+
+        $scope.takePhoto = function () {
+            Camera.getPicture().then(function (imageURI) {
+                console.log(imageURI);
+            }, function (err) {
+                console.err(err);
+            });
+        };
+
+    })
+
+    .controller('StoriesCtrl', function ($scope, Chats) {
+        $scope.chats = Chats.all();
+        $scope.remove = function (chat) {
+            Chats.remove(chat);
+        };
+    })
 
 //.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
 //  $scope.chat = Chats.get($stateParams.chatId);
 //})
 
-.controller('AccountCtrl', function($scope) {
-    $scope.settings = {
-        enableFriends: true
-    };
-});
+    .controller('AccountCtrl', function ($scope) {
+        $scope.settings = {
+            enableFriends: true
+        };
+    });
