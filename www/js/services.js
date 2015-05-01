@@ -52,11 +52,8 @@ angular.module('starter.services', [])
 .factory('Stories', function($http) {
 
     return {
-        createStory: function() {
-            return $http.get('http://localhost:3001/create').then(function(res) {
-              console.log('createStory in factory')
-              return res.data;
-            });
+        startStory: function() {
+
         },
 
         endStory: function() {
